@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
 require('dotenv').config();
 const exportToExcel = require('./exportToExcel');
+const excelDownload = require('./excelDownload');
 
 const app = express();
 const PORT = process.env.PORT || 3000
@@ -296,11 +297,32 @@ app.get('/export', async (req, res) => {
 });
 
 
+
+
 app.get('/download', (req, res) => {
   const filePath = '/data/output.xlsx';
   res.download(`public${filePath}`);
 });
 
+
+app.get('/download2', async (req, res) => {
+  try {
+    if (!app.db) {
+      throw new Error('Database connection not established');
+    }
+
+    const collection = app.db.collection(collectionName);
+
+    // Retrieve data from collection
+    const data = await collection.find({}).toArray();
+
+    // Call the excelDownload function
+    await excelDownload(data, res);
+  } catch (error) {
+    console.error('Error exporting data to Excel:', error);
+    res.status(500).send('Error exporting data to Excel');
+  }
+});
 
 
 
