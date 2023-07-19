@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
 require('dotenv').config();
+const exportToExcel = require('./exportToExcel');
 
 const app = express();
 const PORT = process.env.PORT || 3000
@@ -13,7 +14,8 @@ const db_username = process.env.DB_USERNAME;
 const db_password = process.env.DB_PASSWORD;
 const db_cluster_url = process.env.DB_CLUSTER_URL;
 const db_name = process.env.DB_NAME;
-
+const collectionName = process.env.COLLECTION_NAME;
+const port = process.env.PORT || 3000; // Use the PORT environment variable if available, otherwise use port 3000
 
 const connectDB = async () => {
   try {
@@ -23,6 +25,7 @@ const connectDB = async () => {
     });
 
     console.log('Connected to MongoDB Atlas:', conn.connection.host);
+    app.db = conn.connection.db; // Assign the database object to app.db
   } catch (error) {
     console.error('Error connecting to MongoDB Atlas:', error);
     process.exit(1);
@@ -267,6 +270,41 @@ app.post("/index", function(req, res) {
   console.error("Error in finding documents:", error);
 });
 });
+
+
+// Export to Excel route
+app.get('/export', async (req, res) => {
+  try {
+    if (!app.db) {
+      throw new Error('Database connection not established');
+    }
+
+    const collection = app.db.collection(collectionName);
+
+    // Retrieve data from collection
+    const data = await collection.find({}).toArray();
+
+    // Call the exportToExcel function
+    const filePath = await exportToExcel(data);
+
+    // Send the Excel file as a response
+    res.download(filePath);
+  } catch (error) {
+    console.error('Error exporting data2 to Excel:', error);
+    res.status(500).send('Error exporting data3 to Excel');
+  }
+});
+
+
+app.get('/download', (req, res) => {
+  const filePath = '/data/output.xlsx';
+  res.download(`public${filePath}`);
+});
+
+
+
+
+
 
 connectDB().then(() => {
   app.listen(PORT, () => {
