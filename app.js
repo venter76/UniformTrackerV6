@@ -39,8 +39,6 @@ const connectDB = async () => {
 
 
 
-
-
 const uniformSchema = new mongoose.Schema({
   itemName: "String",
   total: Number,
@@ -58,7 +56,6 @@ app.get("/", function(req, res){
     res.render("start");
   
 });
-
 
 
 
@@ -300,8 +297,6 @@ app.get('/export', async (req, res) => {
 });
 
 
-
-
 app.get('/download', (req, res) => {
   const filePath = '/data/output.xlsx';
   res.download(`public${filePath}`);
@@ -344,6 +339,8 @@ app.get('/pdf', async (req, res) => {
       res.status(500).send('An error occurred while creating the PDF');
   }
 });
+
+
 
 
 connectDB().then(() => {
