@@ -4,6 +4,9 @@ const mongoose = require("mongoose");
 require('dotenv').config();
 const exportToExcel = require('./exportToExcel');
 const excelDownload = require('./excelDownload');
+const createPdf = require('./createPDF');
+
+
 
 const app = express();
 const PORT = process.env.PORT || 3000
@@ -325,7 +328,22 @@ app.get('/download2', async (req, res) => {
 });
 
 
+app.get('/pdf', async (req, res) => {
+  const { url } = req.query;
 
+  if (!url) {
+      return res.status(400).send('URL is required');
+  }
+
+  try {
+      const pdf = await createPdf(url);
+      res.set({ 'Content-Type': 'application/pdf', 'Content-Length': pdf.length });
+      res.send(pdf);
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('An error occurred while creating the PDF');
+  }
+});
 
 
 connectDB().then(() => {
