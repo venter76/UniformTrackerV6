@@ -16,8 +16,8 @@ const exportToExcel = async (data) => {
   // Specify the relative file path
   const now = new Date();
   const timestamp = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}_${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}`;
-  const directory = path.join(__dirname, 'public/data/');
-  const filePath = path.join(directory, `output_${timestamp}.xlsx`);
+  const directory = path.resolve(__dirname, 'public/data/');
+  const filePath = path.resolve(directory, `output_${timestamp}.xlsx`);
   
 
 
