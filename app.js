@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
 require('dotenv').config();
 const exportToExcel = require('./exportToExcel');
+const exportToExceel = require('./exportToExceel');
 const excelDownload = require('./excelDownload');
 const createPdf = require('./createPDF');
 
@@ -273,7 +274,7 @@ app.post("/index", function(req, res) {
 });
 
 
-// Export to Excel route
+// Export to Excel route and download file to server and user (using dodgy XLSL package)
 app.get('/export', async (req, res) => {
   try {
     if (!app.db) {
@@ -296,12 +297,76 @@ app.get('/export', async (req, res) => {
   }
 });
 
+// Route to download file to server and for user download (using dodgy XLSL package):
+// app.get('/download', (req, res) => {
+//   const filePath = '/data/output.xlsx';
+//   res.download(`public${filePath}`);
+// });
 
-app.get('/download', (req, res) => {
-  const filePath = '/data/output.xlsx';
-  res.download(`public${filePath}`);
-});
 
+
+//  $$$$$Route to download to server and to user for better node-xlsx package:
+// app.get('/download2', async (req, res) => {
+//   try {
+//     if (!app.db) {
+//       throw new Error('Database connection not established');
+//     }
+
+//     const collection = app.db.collection(collectionName);
+
+//     // Retrieve data from collection
+//     const data = await collection.find({}).toArray();
+
+//     // Call the exportToExcel function and get the path to the file
+//     const filePath = await exportToExceel(data);
+
+//     // Send the file to the user for download
+//     res.download(filePath, err => {
+//       if (err) {
+//         console.error('Error:', err);
+//         res.status(500).send('Error exporting data to Excel');
+//       } else {
+//         console.log('File sent successfully');
+//       }
+//     });
+
+//   } catch (error) {
+//     console.error('Error exporting data to Excel:', error);
+//     res.status(500).send('Error exporting data to Excel');
+//   }
+// });
+
+
+
+
+
+// Route to push file to user download only (using dodgy XLSL package):
+// app.get('/download2', async (req, res) => {
+//   try {
+//     if (!app.db) {
+//       throw new Error('Database connection not established');
+//     }
+
+//     const collection = app.db.collection(collectionName);
+
+//     // Retrieve data from collection
+//     const data = await collection.find({}).toArray();
+
+//     // Call the excelDownload function
+//     await excelDownload(data, res);
+//   } catch (error) {
+//     console.error('Error exporting data to Excel:', error);
+//     res.status(500).send('Error exporting data to Excel');
+//   }
+// });
+
+
+
+
+
+// Route to create PDF of screenshot:
+
+// Use this to ONLY push download to USER (ie. not save on server) using good node-XLSX package:
 
 app.get('/download2', async (req, res) => {
   try {
@@ -314,8 +379,19 @@ app.get('/download2', async (req, res) => {
     // Retrieve data from collection
     const data = await collection.find({}).toArray();
 
-    // Call the excelDownload function
-    await excelDownload(data, res);
+    // Call the exportToExcel function
+    const buffer = await exportToExceel(data);
+
+    // Generate a timestamp
+    const now = new Date();
+    const timestamp = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}_${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}`;
+
+    // Set up response headers
+    res.setHeader('Content-Disposition', `attachment; filename="output_${timestamp}.xlsx"`);
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+    // Send buffer to client to trigger file download
+    res.send(buffer);
   } catch (error) {
     console.error('Error exporting data to Excel:', error);
     res.status(500).send('Error exporting data to Excel');
@@ -323,6 +399,9 @@ app.get('/download2', async (req, res) => {
 });
 
 
+
+
+// Route to create PDF of screenshot (using pupputeer package):
 app.get('/pdf', async (req, res) => {
   const { url } = req.query;
 

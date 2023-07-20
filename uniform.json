@@ -2,24 +2,24 @@
   
   "itemName": "Tracksuit top",
   "total": 4,
-  "stePet": 2,
-  "che": 2
+  "stePet": 3,
+  "che": 1
 },
 
 {
  
   "itemName": "Tracksuit pants",
   "total": 3,
-  "stePet": 1,
-  "che": 2
+  "stePet": 2,
+  "che": 1
 },
 
 {
   
   "itemName": "Jersey",
   "total": 2,
-  "stePet": 1,
-  "che": 1
+  "stePet": 2,
+  "che": 0
 },
 
 {
@@ -33,8 +33,8 @@
 {
   
   "itemName": "Winter dress",
-  "total": 1,
-  "stePet": 1,
+  "total": 2,
+  "stePet": 2,
   "che": 0
 },
 
@@ -42,8 +42,8 @@
  
   "itemName": "Long sleeve shirts",
   "total": 2,
-  "stePet": 0,
-  "che": 2
+  "stePet": 2,
+  "che": 0
 },
 
 {
@@ -66,23 +66,23 @@
   
   "itemName": "Blazer",
   "total": 1,
-  "stePet": 0,
-  "che": 1
+  "stePet": 1,
+  "che": 0
 },
 
 {
  
   "itemName": "School shoes",
   "total": 1,
-  "stePet": 0,
-  "che": 1
+  "stePet": 1,
+  "che": 0
 },
 
 {
   
   "itemName": "Rain coat",
   "total": 1,
-  "stePet": 0,
+  "stePet": 1,
   "che": 0
 },
 
@@ -90,8 +90,8 @@
  
   "itemName": "Scarf",
   "total": 1,
-  "stePet": 0,
-  "che": 1
+  "stePet": 1,
+  "che": 0
 },
 
 {
@@ -122,16 +122,16 @@
  
   "itemName": "Gym tops",
   "total": 5,
-  "stePet": 4,
-  "che": 1
+  "stePet": 5,
+  "che": 0
 },
 
 {
  
   "itemName": "White takkies",
   "total": 1,
-  "stePet": 0,
-  "che": 1
+  "stePet": 1,
+  "che": 0
 },
 
 {
